@@ -1,0 +1,204 @@
+%
+%         File: Classification.tex
+%  Description:
+%       Author: Bernhard Stankwitz <be5tan@posteo.de>
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[a4paper,11pt]{article} %{{{
+\usepackage[cm]{fullpage}  % kleinere Ränder
+\usepackage[english]{babel}
+\usepackage[numbers]{natbib}  % bibtex
+\usepackage{fontspec}  % for xetex and bolder font
+\usepackage{amssymb}  % für mathbb
+\usepackage{amsthm}	 % Theoremstyle proof umgebung
+\usepackage{amsmath}
+\usepackage{upgreek}  % For a second upper case Theta
+\usepackage{mathrsfs}
+\usepackage{graphicx}  % figures
+\usepackage{float}  % figures
+\usepackage{enumitem}
+\usepackage[hyperref]{xcolor}  % colors for hyperref
+\usepackage{hyperref}
+\definecolor{solyellow}{HTML}{b58900}
+\definecolor{solorange}{HTML}{cb4b16}
+\definecolor{solred}{HTML}{dc322f}
+\definecolor{solmagenta}{HTML}{d33682}
+\definecolor{solviolet}{HTML}{6c71c4}
+\definecolor{solblue}{HTML}{268bd2}
+\definecolor{solcyan}{HTML}{2aa198}
+\definecolor{solgreen}{HTML}{859900}
+\hypersetup{
+    linktocpage = true,
+    colorlinks = true,  % colors the border
+    linkcolor = solred,
+    citecolor = solgreen,
+    urlcolor = solblue
+}
+
+\DeclareMathOperator*{\argmin}{arg\!\min}
+\DeclareMathOperator*{\argmax}{arg\!\max}
+\DeclareMathOperator*{\vspan}{span}
+\DeclareMathOperator*{\tr}{tr}
+\DeclareMathOperator*{\im}{im}
+\DeclareMathOperator*{\rk}{rk}
+\DeclareMathOperator*{\kl}{KL}
+\DeclareMathOperator*{\Bin}{Bin}
+\DeclareMathOperator*{\Poi}{Poi}
+\DeclareMathOperator*{\CPoi}{CPoi}
+\DeclareMathOperator*{\Unif}{Unif}
+\DeclareMathOperator*{\Exp}{Exp}
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\co}{co}
+\DeclareMathOperator*{\inn}{int}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\epi}{epi}
+\DeclareMathOperator*{\conv}{Conv}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\DeclareMathOperator*{\asin}{asin}
+\DeclareMathOperator*{\acos}{acos}
+\DeclareMathOperator*{\atan}{atan}
+\DeclareMathOperator*{\acot}{acot}
+
+\theoremstyle{definition}
+\newtheorem{defi}{Definition}[section]
+\newtheorem{exer}[defi]{Exercise}
+\newtheorem{aufg}[defi]{Aufgabe}
+\newtheorem{alg}[defi]{Algorithm}
+
+\theoremstyle{remark}
+\newtheorem{expl}[defi]{Example}
+\newtheorem{bsp}[defi]{Beispiel}
+\newtheorem{bem}[defi]{Bemerkung}
+\newtheorem{rem}[defi]{Remark}
+
+\theoremstyle{plain}
+\newtheorem{lem}[defi]{Lemma}
+\newtheorem{stz}[defi]{Satz}
+\newtheorem{cor}[defi]{Corollary}
+\newtheorem{thm}[defi]{Theorem}
+\newtheorem{prp}[defi]{Proposition}
+
+\numberwithin{equation}{section}
+% \setcounter{section}{+1}  % contral Chapter number
+
+%}}}
+
+\begin{document}
+\title{Classification}
+\author{Bernhard Stankewitz \\ \texttt{bernhard.stankewitz@posteo.de}}
+\maketitle
+\abstract{...}
+\tableofcontents
+
+\section{Elementary definitions and the Bayes classifier}%{{{
+\label{sec:ElementaryDefinitionsAndTheBayesClassifier}
+
+\begin{defi}[Classifier]%{{{
+  \label{def:Classifier}
+  \
+  \begin{enumerate}[label=(\alph*)]
+    \item For i.i.d. training data \( ( X_{1}, Y_{1} ), \dots, ( X_{n}, Y_{n} )
+      \in \mathbb{R}^{d} \times \{ 1, \dots, K \} \), a classifier is a
+      measurable function \( C : \mathbb{R}^{d} \to \{ 1, \dots, K \} \). The
+      classification error is given by
+      \begin{align*}
+        R(C) 
+        & : = \mathbb{P} \{ C(X) \ne Y \} 
+          =   \mathbb{E} \mathbf{1}_{C(X) \ne Y}. 
+      \end{align*}
+    \item In case that the labels are given by \( \{ 0, 1 \} \), the
+      classification error 
+      \begin{align*}
+        R(C) 
+        & = \mathbb{E} ( Y - C(X) )^{2} 
+        = \int \mathbf{1}_{y \ne C(x)} \, \mathbb{P}^{X, Y}(d(x, y)). 
+      \end{align*}
+  \end{enumerate}
+\end{defi}%}}}
+
+In case all theoretical quantities are known, a classification problem has an
+optimal solution.
+\begin{prp}[Bayes-Classifier]%{{{
+  \label{prp:BayesClassifier}
+  \
+  \begin{enumerate}[label=(\roman*)]
+    \item In the situation of Definition \ref{def:Classifier}, the
+      classification error is minimised by the Bayes classifier
+      \begin{align*}
+        C^{\text{Bayes}}(x) 
+        & : = \argmax_{k = 1, \dots, K} \mathbb{P} \{ Y = k | X = x \}. 
+      \end{align*}
+    \item If the labels are given by \( \{ 0, 1 \} \), we have
+      \begin{align*}
+        C^{\text{Bayes}}(x) 
+        & = \mathbf{1}_{} \{ \eta(x) \ge 1 / 2 \} 
+        \qquad \text{ with } \qquad 
+        \eta(x) : = \mathbb{P} \{ Y = 1 | X = x \}.
+      \end{align*}
+  \end{enumerate}
+\end{prp}%}}}
+\begin{proof}%{{{
+  For any classifier \( C \), we have
+  \begin{align*}
+    R(C) 
+    & =   1 - \mathbb{E} \mathbb{E} \mathbf{1}_{C = Y} | X 
+      =   1 
+          -
+          \mathbb{E} \sum_{k = 1}^{K} 
+          \mathbb{E} ( \mathbf{1}_{C = k} \mathbf{1}_{Y = k} | X ) 
+      =   1 
+          - 
+          \mathbb{E} \sum_{k = 1}^{K} 
+          \mathbf{1}_{C = k}  
+          \mathbb{E} ( \mathbf{1}_{Y = k} | X ). 
+  \end{align*}
+  <++>
+\end{proof}%}}}
+
+%}}} section Elementary definitions and the Bayes classifier (end) 
+
+\section{The KNN-classifier}%{{{
+\label{sec:TheKNNClassifier}
+
+\begin{defi}[KNN-classifier]%{{{
+  \label{def:KNNClassifier}
+  \
+  \begin{enumerate}[label=(\alph*)]
+    \item Let \( ( X_{1}, Y_{1} ), \dots, ( X_{n}, Y_{n} ) \in \mathbb{R}^{d}
+      \times \{ 1, \dots, J \} \) be a training sample and \( K \in \mathbb{N}
+      \). For \( x \in \mathbb{R}^{d} \), let \( N_{K}(x) \) be the set of the
+      \( K \) nearest neighbours of \( x \) with respect to the euclidean
+      distance. Then, the KNN-classifier is given by
+      \begin{align*}
+        \hat C^{\text{KNN}}(x) 
+        & : = \argmax_{j = 1, \dots, J} 
+        \frac{1}{K} \sum_{X_{i} \in N_{K}(x)} \mathbf{1}_{Y_{i} = j}.  
+      \end{align*}
+    \item In case, the labels are given by \( \{ 0, 1 \} \), we have
+      \begin{align*}
+        \hat C^{\text{KNN}}(x) 
+        = \mathbf{1}_{} \{ \hat \eta(x) \ge 1 / 2 \} 
+        \qquad \text{ with } \qquad 
+        \hat \eta(x) 
+        : = \frac{1}{K} \sum_{X_{i} \in N_{K}(x)} \mathbf{1}_{Y_{i} = 1} 
+        = : \sum_{i = 1}^{n} w_{i}(x) Y_{i},
+      \end{align*}
+      where \( w_{i} : = \mathbf{1}_{X_{i} \in N_{K}(x)} / K  \) with \( \sum_{i
+      = 1}^{n} w_{i} = 1 \). 
+  \end{enumerate}
+\end{defi}%}}}
+
+\begin{thm}[Consistency of KNN]%{{{
+  \label{thm:ConsistencyOfKNN}
+  
+\end{thm}%}}}
+
+%}}} section The KNN-classifier (end) 
+
+% \bibliographystyle{plainnat}
+% \bibliography{references.bib}
+
+\end{document}
