@@ -13,7 +13,6 @@
 \usepackage[cm]{fullpage}                     % Small margins
 \usepackage[english]{babel}
 \usepackage[numbers]{natbib}                  % Bibtex
-\usepackage{fontspec}                         % Xetex and bolder font
 \usepackage{amssymb}                          % Mathbb
 \usepackage{amsthm}	                          % Theoremstyle proof environmen
 \usepackage{amsmath}
@@ -241,7 +240,7 @@ optimal solution.
   In the situation of Definition \ref{def:KNNClassifier} (b), we have that 
   \begin{align*}
     | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | 
-    & \le \sqrt{\mathbb{E}_{n + 1} | \hat \eta(X) - \eta(X) |^{2}} 
+    & \le 2 \sqrt{\mathbb{E}_{n + 1} | \hat \eta(X) - \eta(X) |^{2}} 
   \end{align*}
 \end{lem}%}}}
 \begin{proof}%{{{
@@ -264,22 +263,16 @@ optimal solution.
         | 
     \\ 
     & = | 
-            \hat \eta + \mathbf{1}_{\hat C^{\text{KNN}} = 0} ( 1 - 2 \hat \eta ) 
-          - \eta + \mathbf{1}_{C^{\text{Bayes}} = 0} ( 1 - 2 \eta )
-        |
-    \\ 
-    & = \begin{cases}
-          | \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}, \\ 
-          | 1 - \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}.
-        \end{cases}
-    \\ 
-    & \le \begin{cases}
-            | \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}, \\ 
-            | 1 / 2 - \hat \eta \land  \eta |,
-            & \hat C^{\text{KNN}} = C^{\text{Bayes}}.
-          \end{cases}
-      \le | \hat \eta - \eta |.
+          \mathbf{1}_{\hat C^{\text{KNN}} = 0} ( 1 - 2 \eta ) 
+          - 
+          \mathbf{1}_{\hat C^{\text{Bayes}} = 0} ( 1 - 2 \eta ) 
+        | 
+      = \mathbf{1}_{\hat C^{\text{KNN}} \ne C^{\text{Bayes}}} 
+        | 1 - 2 \eta | 
+      \le 2 | \hat \eta - \eta |.
   \end{align*}
+  For the last step, use that either \( \hat \eta \ge 1 / 2 > \eta \) or
+  reverse.
   For the second to last step, use that one of \( \eta \) and \( \hat \eta \)
   has to be above and one below \( 1 / 2 \). 
   By conditioning on \( X \) and Jensen's inequality, this gives
@@ -291,7 +284,7 @@ optimal solution.
             - \mathbf{1}_{C^{\text{Bayes}} \ne Y}
           )
         |^{2} 
-      \le \mathbb{E}_{\le n + 1} | \hat \eta - \eta |^{2}.
+      \le 4 \mathbb{E}_{\le n + 1} | \hat \eta - \eta |^{2}.
   \end{align*}
 \end{proof}%}}}
 
@@ -310,7 +303,7 @@ optimal solution.
   From Lemma \ref{lem:ReductionToTheRegressionFunction}, we obtain with the
   triangle inequality
   \begin{align*}
-    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | 
+    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | / 2 
     & \le \sqrt{\mathbb{E}_{\le n + 1} | \hat \eta(X) - \eta(X) |^{2}} 
       = \sqrt{
           \mathbb{E}_{\le n + 1} | 
@@ -352,33 +345,33 @@ optimal solution.
   \( \delta > 0 \), that 
   \begin{align*}
     \mathbb{E}_{\le n + 1} | 
+      & 
       \sum_{i = 1}^{n} w_{i}(X) ( \eta(X_{i}) - \eta(X) )^{2} 
     | 
-    & \le \mathbb{E}_{\le n + 1} | 
+      \le \mathbb{E}_{\le n + 1} | 
             \sum_{i = 1}^{n} w_{i}(X) \mathbf{1}_{| X_{i} - X | \ge \delta} 
             + \varepsilon
           | 
     \\ 
-    & \le \mathbb{E}_{\le n + 1} | 
-          K^{-1} \sum_{i = 1}^{K} 
-          \mathbf{1}_{
-            \sum_{i = 1}^{n} \mathbf{1}_{| X_{i} - X | < \delta}  \le i
-          }  
-          + \varepsilon 
-    \\ 
-    & \le \mathbb{P} \Big\{ 
-            \frac{1}{n} \sum_{i = 1}^{n} \mathbf{1}_{| X_{i} - X | < \delta} 
-            \le K / n
+    & \le \mathbb{E}_{\le n + 1}
+          \frac{1}{K} \sum_{i = 1}^{K} 
+          w_{i}(X) \mathbf{1} \Big\{ 
+            \sum_{i = 1}^{n}
+            \mathbf{1}_{| X_{i} - X | < \delta} \le i  
           \Big\} 
-          + \varepsilon, 
+      \le \mathbb{P} \Big\{ 
+            \frac{1}{n} 
+            \sum_{i = 1}^{n} \mathbf{1}_{| X_{i} - X | < \delta}
+            \le K / n 
+          \Big\}    
+          + \varepsilon. 
   \end{align*}
-  since in case that the i-th neighbour has a distance of more than \( \delta \)
-  of \( X \), at most \( i \) observations are this close to \( X \). (W.l.o.g.
-  order the \( ( X_{i} ) \)). That the last term converges to \( 0 \) follows
-  from dominated convergence.
+  The last term is eventually smaller than \( 2 \varepsilon \) by dominated
+  convergence.
 \end{proof}%}}}
 
 %}}} section The KNN-classifier (end) 
+
 
 % \bibliographystyle{plainnat}
 % \bibliography{references.bib}
