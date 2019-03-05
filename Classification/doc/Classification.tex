@@ -359,10 +359,23 @@ optimal solution.
             + \varepsilon
           | 
     \\ 
-    & \le 
+    & \le \mathbb{E}_{\le n + 1} | 
+          K^{-1} \sum_{i = 1}^{K} 
+          \mathbf{1}_{
+            \sum_{i = 1}^{n} \mathbf{1}_{| X_{i} - X | < \delta}  \le i
+          }  
+          + \varepsilon 
+    \\ 
+    & \le \mathbb{P} \Big\{ 
+            \frac{1}{n} \sum_{i = 1}^{n} \mathbf{1}_{| X_{i} - X | < \delta} 
+            \le K / n
+          \Big\} 
+          + \varepsilon, 
   \end{align*}
-  <++>
-  
+  since in case that the i-th neighbour has a distance of more than \( \delta \)
+  of \( X \), at most \( i \) observations are this close to \( X \). (W.l.o.g.
+  order the \( ( X_{i} ) \)). That the last term converges to \( 0 \) follows
+  from dominated convergence.
 \end{proof}%}}}
 
 %}}} section The KNN-classifier (end) 
