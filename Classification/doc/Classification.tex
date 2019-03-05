@@ -1,42 +1,59 @@
 %
 %         File: Classification.tex
-%  Description:
-%       Author: Bernhard Stankwitz <be5tan@posteo.de>
+%  Description: Summary of elemetary results for classification.
+%       Author: Bernhard Stankwitz <bernhard.stankewitz@posteo.de>
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \documentclass[a4paper,11pt]{article} %{{{
-\usepackage[cm]{fullpage}  % kleinere Ränder
+
+%{{{ Packages
+%===============================================================================
+\usepackage[cm]{fullpage}                     % Small margins
 \usepackage[english]{babel}
-\usepackage[numbers]{natbib}  % bibtex
-\usepackage{fontspec}  % for xetex and bolder font
-\usepackage{amssymb}  % für mathbb
-\usepackage{amsthm}	 % Theoremstyle proof umgebung
+\usepackage[numbers]{natbib}                  % Bibtex
+\usepackage{fontspec}                         % Xetex and bolder font
+\usepackage{amssymb}                          % Mathbb
+\usepackage{amsthm}	                          % Theoremstyle proof environmen
 \usepackage{amsmath}
-\usepackage{upgreek}  % For a second upper case Theta
+\usepackage{upgreek}                          % Second upper case Theta
 \usepackage{mathrsfs}
-\usepackage{graphicx}  % figures
-\usepackage{float}  % figures
+\usepackage{graphicx}                         % Figures
+\usepackage{float}                            % Figures
 \usepackage{enumitem}
-\usepackage[hyperref]{xcolor}  % colors for hyperref
+\usepackage{xcolor}                           % Colors 
+\usepackage{sectsty}                          % Individually colored sections
 \usepackage{hyperref}
-\definecolor{solyellow}{HTML}{b58900}
-\definecolor{solorange}{HTML}{cb4b16}
-\definecolor{solred}{HTML}{dc322f}
-\definecolor{solmagenta}{HTML}{d33682}
-\definecolor{solviolet}{HTML}{6c71c4}
-\definecolor{solblue}{HTML}{268bd2}
-\definecolor{solcyan}{HTML}{2aa198}
-\definecolor{solgreen}{HTML}{859900}
+%}}}
+
+%{{{ Color options
+%===============================================================================
+\definecolor{gruvbg}{HTML}{282828}
+\definecolor{gruvfg}{HTML}{ebdbb2}
+\definecolor{gruvyellow}{HTML}{d79921}
+\definecolor{gruvred}{HTML}{cc241d}
+\definecolor{gruvblue}{HTML}{458588}
+\definecolor{gruvgreen}{HTML}{98971a}
+
+\pagecolor{gruvbg}                            % background color
+\color{gruvfg}                                % foreground color
+\sectionfont{\color{gruvyellow}}              % Sets color of sections
+\subsectionfont{\color{gruvyellow}}           % Sets color of subsections
 \hypersetup{
     linktocpage = true,
-    colorlinks = true,  % colors the border
-    linkcolor = solred,
-    citecolor = solgreen,
-    urlcolor = solblue
+    colorlinks = true,                        % Colors the border
+    linkcolor = gruvred,
+    citecolor = gruvgreen,
+    urlcolor = gruvblue
 }
 
+\numberwithin{equation}{section}
+% \setcounter{section}{+1}                    % Contral Chapter number
+%}}}
+
+%{{{ Math operators
+%===============================================================================
 \DeclareMathOperator*{\argmin}{arg\!\min}
 \DeclareMathOperator*{\argmax}{arg\!\max}
 \DeclareMathOperator*{\vspan}{span}
@@ -61,28 +78,59 @@
 \DeclareMathOperator*{\acos}{acos}
 \DeclareMathOperator*{\atan}{atan}
 \DeclareMathOperator*{\acot}{acot}
+%}}}
 
-\theoremstyle{definition}
+%{{{ Theoremstyles
+%===============================================================================
+\newtheoremstyle{ndefinition}  % Name 
+  {\topsep}                    % Space above theorem, e.g. 3pt
+  {\topsep}                    % Space below theorem, e.g. 3pt
+  {\color{gruvblue}}           % Font in body of theorem
+  {0pt}                        % Space to indent
+  {\bfseries\color{gruvblue}}  % Name of head font
+  {.}                          % Punctuation between head and body
+  { }                          % Space after theorem head; " " = normal interword space
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{nplain}
+  {\topsep}
+  {\topsep}
+  {\itshape\color{gruvblue}}
+  {0pt}
+  {\bfseries\color{gruvblue}}
+  {.}
+  { }
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{nremark}
+  {\topsep}
+  {\topsep}
+  {}
+  {0pt}
+  {\itshape\color{gruvblue}}
+  {.}
+  { }
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\renewenvironment{proof}
+  {{\noindent \itshape \color{gruvblue} Proof. }}{\color{gruvblue}\qed}
+
+\theoremstyle{ndefinition}
 \newtheorem{defi}{Definition}[section]
 \newtheorem{exer}[defi]{Exercise}
 \newtheorem{aufg}[defi]{Aufgabe}
 \newtheorem{alg}[defi]{Algorithm}
-
-\theoremstyle{remark}
+  
+\theoremstyle{nremark}
 \newtheorem{expl}[defi]{Example}
 \newtheorem{bsp}[defi]{Beispiel}
 \newtheorem{bem}[defi]{Bemerkung}
 \newtheorem{rem}[defi]{Remark}
 
-\theoremstyle{plain}
+\theoremstyle{nplain}
 \newtheorem{lem}[defi]{Lemma}
 \newtheorem{stz}[defi]{Satz}
 \newtheorem{cor}[defi]{Corollary}
 \newtheorem{thm}[defi]{Theorem}
 \newtheorem{prp}[defi]{Proposition}
-
-\numberwithin{equation}{section}
-% \setcounter{section}{+1}  % contral Chapter number
+%}}}
 
 %}}}
 
@@ -90,7 +138,7 @@
 \title{Classification}
 \author{Bernhard Stankewitz \\ \texttt{bernhard.stankewitz@posteo.de}}
 \maketitle
-\abstract{...}
+\abstract{Summary of elemetary results for classification.}
 \tableofcontents
 
 \section{Elementary definitions and the Bayes classifier}%{{{
@@ -146,16 +194,13 @@ optimal solution.
     R(C) 
     & =   1 - \mathbb{E} \mathbb{E} \mathbf{1}_{C = Y} | X 
       =   1 
-          -
-          \mathbb{E} \sum_{k = 1}^{K} 
-          \mathbb{E} ( \mathbf{1}_{C = k} \mathbf{1}_{Y = k} | X ) 
+          - \mathbb{E} \sum_{k = 1}^{K} 
+            \mathbb{E} ( \mathbf{1}_{C = k} \mathbf{1}_{Y = k} | X ) 
       =   1 
-          - 
-          \mathbb{E} \sum_{k = 1}^{K} 
-          \mathbf{1}_{C = k}  
-          \mathbb{E} ( \mathbf{1}_{Y = k} | X ). 
+          - \mathbb{E} \sum_{k = 1}^{K} 
+            \mathbf{1}_{C = k}  
+            \mathbb{E} ( \mathbf{1}_{Y = k} | X ). 
   \end{align*}
-  <++>
 \end{proof}%}}}
 
 %}}} section Elementary definitions and the Bayes classifier (end) 
@@ -191,10 +236,134 @@ optimal solution.
   \end{enumerate}
 \end{defi}%}}}
 
+\begin{lem}[Reduction to the regression function]%{{{
+  \label{lem:ReductionToTheRegressionFunction}
+  In the situation of Definition \ref{def:KNNClassifier} (b), we have that 
+  \begin{align*}
+    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | 
+    & \le \sqrt{\mathbb{E}_{n + 1} | \hat \eta(X) - \eta(X) |^{2}} 
+  \end{align*}
+\end{lem}%}}}
+\begin{proof}%{{{
+  For any classifier \( C \), we have 
+  \begin{align*}
+    \mathbb{P} \{ C(X) = Y | X \} 
+    & = \mathbf{1}_{C = 1} \eta + \mathbf{1}_{C = 0} ( 1 - \eta ) 
+      = \eta + \mathbf{1}_{C = 0} ( 1 - 2 \eta ). 
+  \end{align*}
+  This yields 
+  \begin{align*}
+    | 
+        \mathbb{P} \{ \hat C^{\text{KNN}}(X) \ne Y | X \} 
+      & 
+      - \mathbb{P} \{ \hat C^{\text{Bayes}}(X) \ne Y | X \} 
+    | 
+      = | 
+            \mathbb{P} \{ \hat C^{\text{KNN}}(X) = Y | X \} 
+          - \mathbb{P} \{ \hat C^{\text{Bayes}}(X) = Y | X \} 
+        | 
+    \\ 
+    & = | 
+            \hat \eta + \mathbf{1}_{\hat C^{\text{KNN}} = 0} ( 1 - 2 \hat \eta ) 
+          - \eta + \mathbf{1}_{C^{\text{Bayes}} = 0} ( 1 - 2 \eta )
+        |
+    \\ 
+    & = \begin{cases}
+          | \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}, \\ 
+          | 1 - \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}.
+        \end{cases}
+    \\ 
+    & \le \begin{cases}
+            | \hat \eta - \eta |, & \hat C^{\text{KNN}} = C^{\text{Bayes}}, \\ 
+            | 1 / 2 - \hat \eta \land  \eta |,
+            & \hat C^{\text{KNN}} = C^{\text{Bayes}}.
+          \end{cases}
+      \le | \hat \eta - \eta |.
+  \end{align*}
+  For the second to last step, use that one of \( \eta \) and \( \hat \eta \)
+  has to be above and one below \( 1 / 2 \). 
+  By conditioning on \( X \) and Jensen's inequality, this gives
+  \begin{align*}
+    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) |^{2} 
+    & = | 
+          \mathbb{E}_{\le n + 1} ( 
+              \mathbf{1}_{\hat C^{\text{KNN}} \ne Y} 
+            - \mathbf{1}_{C^{\text{Bayes}} \ne Y}
+          )
+        |^{2} 
+      \le \mathbb{E}_{\le n + 1} | \hat \eta - \eta |^{2}.
+  \end{align*}
+\end{proof}%}}}
+
 \begin{thm}[Consistency of KNN]%{{{
   \label{thm:ConsistencyOfKNN}
-  
+  In the situation of Definition \ref{def:KNNClassifier} (b), let \( k \to
+  \infty \), \( k / n \to 0 \) and let \( x \mapsto \eta(x) \) be uniformly
+  continuous. Then, the KNN-classifier \( \hat C^{\text{KNN}} \) is consistent,
+  i.e. 
+  \begin{align*}
+    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | 
+    & \xrightarrow[]{n \to \infty} 0.
+  \end{align*}
 \end{thm}%}}}
+\begin{proof}%{{{
+  From Lemma \ref{lem:ReductionToTheRegressionFunction}, we obtain with the
+  triangle inequality
+  \begin{align*}
+    | \mathbb{E}_{\le n} R(\hat C^{\text{KNN}}) - R(C^{\text{Bayes}}) | 
+    & \le \sqrt{\mathbb{E}_{\le n + 1} | \hat \eta(X) - \eta(X) |^{2}} 
+      = \sqrt{
+          \mathbb{E}_{\le n + 1} | 
+            \sum_{i = 1}^{n} w_{i}(X) ( Y_{i} - \eta(X) )
+          |^{2}
+        } 
+    \\ 
+    & \le   \sqrt{
+              \mathbb{E}_{\le n + 1} | 
+                \sum_{i = 1}^{n} w_{i}(X) ( Y_{i} - \eta(X_{i}) )
+              |^{2}
+            } 
+          + \sqrt{
+              \mathbb{E}_{\le n + 1} | 
+                \sum_{i = 1}^{n} w_{i}(X) ( \eta(X_{i}) - \eta(X) )
+              |^{2}
+            } 
+  \end{align*}
+  In the following, we consider the two terms separately.
+
+  For the first term, we have by independence 
+  \begin{align*}
+    \mathbb{E}_{\le n + 1} | 
+      \sum_{i = 1}^{n} w_{i}(X) ( Y_{i} - \eta(X_{i}) )
+    |^{2} 
+    & = \mathbb{E}_{\le n + 1}
+        \sum_{i = 1}^{n} 
+        w_{i}(X)^{2} ( Y_{i} - \eta(X_{i}) )^{2} 
+    \\ 
+    & \le \mathbb{E}_{\le n + 1} \Big( 
+            \max_{i \le n} w_{i}(X) 
+            \sum_{i = 1}^{n} w_{i}(X)
+          \Big) 
+      \le 1 / K 
+      \xrightarrow[]{n \to \infty} 0. 
+  \end{align*}
+
+  For the second term, we have for any \( \varepsilon > 0 \) and corresponding
+  \( \delta > 0 \), that 
+  \begin{align*}
+    \mathbb{E}_{\le n + 1} | 
+      \sum_{i = 1}^{n} w_{i}(X) ( \eta(X_{i}) - \eta(X) )^{2} 
+    | 
+    & \le \mathbb{E}_{\le n + 1} | 
+            \sum_{i = 1}^{n} w_{i}(X) \mathbf{1}_{| X_{i} - X | \ge \delta} 
+            + \varepsilon
+          | 
+    \\ 
+    & \le 
+  \end{align*}
+  <++>
+  
+\end{proof}%}}}
 
 %}}} section The KNN-classifier (end) 
 

@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1550522298 "Classification.tex" "Classification.pdf" "Classification" 1550522299
+["pdflatex"] 1551781162 "Classification.tex" "Classification.pdf" "Classification" 1551781164
   "/etc/texmf/web2c/texmf.cnf" 1525344776 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1480098689 1528 f853c4d1b4e0550255e02831fdc8496f ""
@@ -86,19 +86,20 @@
   "/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty" 1480098836 22417 1d9df1eb66848aa31b18a593099cf45c ""
   "/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty" 1480098836 9581 023642318cef9f4677efe364de1e2a27 ""
   "/usr/share/texlive/texmf-dist/tex/latex/preprint/fullpage.sty" 1480098837 2789 05b418f78b224ec872f5b11081138605 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/sectsty/sectsty.sty" 1480098838 22423 d476012cd03f82f9475ad54ba6cd3267 ""
   "/usr/share/texlive/texmf-dist/tex/latex/url/url.sty" 1480098842 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/share/texlive/texmf-dist/tex/latex/was/upgreek.sty" 1480098843 5794 9054e31be15d93f1e6bd28cca2b6643f ""
   "/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty" 1480098843 55589 34128738f682d033422ca125f82e5d62 ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1520210507 32485 c64754543d8ac501bea6e75e209ea521 ""
   "/usr/share/texmf/web2c/texmf.cnf" 1520210507 32485 c64754543d8ac501bea6e75e209ea521 ""
   "/var/lib/texmf/web2c/xetex/xelatex.fmt" 1539404833 3706286 cca350debc1e18af1320b9892e9f584a ""
-  "Classification.aux" 1550522299 1334 17850557892a93d56c2312fd93a06739 ""
-  "Classification.out" 1550522299 153 b2a04be6db983336c375e9d1d5b39777 ""
-  "Classification.tex" 1550522298 6444 cc6bef376517ffceb8feebdbe73ca131 ""
-  "Classification.toc" 1550522299 198 4032041acdfc8b60f8afc9dd8d848fcd ""
+  "Classification.aux" 1551781164 1442 46b70768a3dfe45b775daaf53b662cbf ""
+  "Classification.out" 1551781164 153 b2a04be6db983336c375e9d1d5b39777 ""
+  "Classification.tex" 1551781163 12644 d8eca5b4c5a66f49453ee184a6b0d74a ""
+  "Classification.toc" 1551781164 198 73577251f36cc3dbe37427c6e0d97915 ""
   (generated)
+  "Classification.log"
   "Classification.aux"
   "Classification.out"
-  "Classification.toc"
   "Classification.pdf"
-  "Classification.log"
+  "Classification.toc"
