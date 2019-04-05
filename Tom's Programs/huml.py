@@ -29,13 +29,21 @@ class processing:
 
 		return input_data[indeces, :]
 
-def kernel_eval( data, kernel, **kwargs):
+def kernel_eval( data, **kwargs):
+
+	if 'kernel' in kwargs:
+			kernel = kwargs['kernel']
+	else:
+			kernel = 'linear'
 
 	if kernel == 'linear':
 		return np.dot(data, data.T)
 	if kernel == 'exponential':
 		gamma_par = 1
 		return sp.exp(-squareform(pdist(data, 'sqeuclidean'))/ gamma_par**2)
+	if kernel == 'polynomial':
+		power     = 2
+		return np.dot(data, data.T)
 
 class svm:
 	def __init__(self, input_data, input_labels, **kwargs):
@@ -72,7 +80,7 @@ class svm:
 
 		# Now we introduce all the output variables.
 		# The vector of direction (depending on who we are confronting)
-		self.svm_ovo    = np.zeros(shape = (self.num_labels, self.num_labels, self.feat_size))
+		self.svm_ovo    = [ [ [] for i in range(self.num_labels) ] for j in range(self.num_labels) ]
 		# The offset coefficient
 		self.svm_ovo_of = np.zeros(shape = (self.num_labels, self.num_labels, 1))
 
@@ -107,7 +115,8 @@ class svm:
 
 		# We follow the same definitions as in the Wikipedia page.
 		# We get the matrix for which we want to optimize
-		Q = np.multiply(kernel_eval(self.data_red, self.kernel), np.dot(self.labels_ovo, self.labels_ovo.T)).astype(np.double)
+		Q = np.multiply(kernel_eval(self.data_red, kernel = self.kernel), np.tensordot(self.labels_ovo, \
+			self.labels_ovo, axes= 0)).astype(np.double)
 		#vect     = (np.multiply(self.data_red.T, self.labels_ovo).T).astype(np.double)
 		Q_matrix = matrix(Q)
 
@@ -127,8 +136,8 @@ class svm:
 		# We save the optimal direction.
 		dual_direction  = np.asarray(list(sol['x']))
 
-		# Then we pass from the dual to the primal problem:
-		self.svm_ovo[self.cur_label, self.label_vs, :] = np.dot(dual_direction.T, vect)
+		# Then we store the dual:
+		self.svm_ovo[self.cur_label][self.label_vs] = dual_direction
 
 		# We still have to compute the offset (the affine translation b).
 		# This is not completely trivial. We have to use the complementary
