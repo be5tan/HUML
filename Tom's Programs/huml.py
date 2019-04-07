@@ -21,7 +21,7 @@ class processing:
 		# Nothin yet
 		a = []
 
-	def slice(self, input_data, required_labels):
+	def slice( self, input_data, required_labels ):
 
 		# We take the indeces which satisfy the required condition
 		tf_ind  = [ (_ in required_labels) for _ in input_data[:,-1]]
@@ -29,24 +29,41 @@ class processing:
 
 		return input_data[indeces, :]
 
-def kernel_eval( data, **kwargs):
+def norm_eval(data_1, data_2):
+
+	size_train = data_1.shape[0]
+	size_test  = data_2.shape[0]
+	temp = np.zeros(shape = (size_train, size_test))
+
+	for i in range(size_train):
+		for j in range(size_test):
+			temp[i,j] = np.square(np.linalg.norm(data_1[i,:] - data_2[j,:]))
+
+
+	# We compute the norm on every row.
+	return temp
+
+def kernel_eval( data_1, data_2, **kwargs ):
 
 	if 'kernel' in kwargs:
-			kernel = kwargs['kernel']
+		kernel = kwargs['kernel']
 	else:
-			kernel = 'linear'
+		kernel = 'linear'
 
 	if kernel == 'linear':
-		return np.dot(data, data.T)
+		return np.dot(data_1, data_2.T)
+
 	if kernel == 'exponential':
 		gamma_par = 1
-		return sp.exp(-squareform(pdist(data, 'sqeuclidean'))/ gamma_par**2)
+
+		return sp.exp(-norm_eval(data_1, data_2)/gamma_par**2)
+	
 	if kernel == 'polynomial':
 		power     = 2
-		return np.dot(data, data.T)
+		return np.dot(data_1, data_2.T)
 
 class svm:
-	def __init__(self, input_data, input_labels, **kwargs):
+	def __init__( self, input_data, input_labels, **kwargs ):
 
 		# Possible **kwargs:
 		# 1) lambda_par
@@ -96,6 +113,14 @@ class svm:
 		else:
 			self.kernel = 'linear'
 
+	def prediction_function(self, to_evaluate):
+
+		# This evaulates sum_i y_i alpha_i K(x_i, x) for an imput x
+		linear_direction = self.svm_ovo[self.cur_label][self.label_vs]
+		linear_direction = np.multiply(linear_direction, self.labels_ovo)
+
+		return np.dot(linear_direction, kernel_eval(self.data_red, to_evaluate, kernel = self.kernel))
+
 	def prepare_data_ovo(self):
 
 		# We extract the data and labels which have to do with the 
@@ -115,7 +140,7 @@ class svm:
 
 		# We follow the same definitions as in the Wikipedia page.
 		# We get the matrix for which we want to optimize
-		Q = np.multiply(kernel_eval(self.data_red, kernel = self.kernel), np.tensordot(self.labels_ovo, \
+		Q = np.multiply(kernel_eval(self.data_red, self.data_red, kernel = self.kernel), np.tensordot(self.labels_ovo, \
 			self.labels_ovo, axes= 0)).astype(np.double)
 		#vect     = (np.multiply(self.data_red.T, self.labels_ovo).T).astype(np.double)
 		Q_matrix = matrix(Q)
@@ -149,8 +174,8 @@ class svm:
 
 		# Then for stability we take the average of the of the results
 		# in these directions (suggested by a MSE answer).
-		self.svm_ovo_of[self.cur_label, self.label_vs, :] = np.dot(active_points, np.dot(self.data_red, self.svm_ovo[self.cur_label,\
-		 self.label_vs, :]) - self.labels_ovo)/np.sum(active_points)
+		self.svm_ovo_of[self.cur_label, self.label_vs, :] = np.dot(active_points, \
+			self.prediction_function(self.data_red) - self.labels_ovo)/np.sum(active_points)
 
 	def fit(self):
 		#Here we fit the svm to the data
@@ -174,8 +199,15 @@ class svm:
 
 		for label_index in range(self.num_labels):
 			for label_vs_index in range(label_index+1, self.num_labels):
-				prediction_vector[:, label_index, label_vs_index] = np.dot(input_dataset_test, self.svm_ovo[label_index,\
-				 label_vs_index, :].T) - self.svm_ovo_of[label_index, label_vs_index, :].T
+				
+				# We always need the sliced data!
+				self.cur_label = label_index
+				self.label_vs  = label_vs_index
+				self.prepare_data_ovo()
+
+				# In this way we can compute the prediction function
+				prediction_vector[:, label_index, label_vs_index] = self.prediction_function(input_dataset_test)\
+				 - self.svm_ovo_of[label_index, label_vs_index, :].T
 
 				#We make the matrix antisymmetric.
 				prediction_vector[:, label_vs_index, label_index] = - prediction_vector[:, label_index, label_vs_index]

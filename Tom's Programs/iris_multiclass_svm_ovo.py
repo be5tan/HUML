@@ -25,6 +25,8 @@ from sklearn.svm import SVC
 
 # Import hand-made SVM program.
 from huml import svm
+from huml import kernel_eval
+from huml import norm_eval
 
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 
@@ -53,72 +55,77 @@ predict_test = exmpl.predict(data_test)
 print(confusion_matrix(label_test, predict_test))  
 print(classification_report(label_test, predict_test))
 
-# We can also plot the results:
-color_dict = {0: 'tab:blue', 1: 'tab:orange', 2: 'tab:green'}
 
-le = preprocessing.LabelEncoder()
-le.fit(data_label)
 
-numerical_label = le.transform(data_label)
-my_cmap = [color_dict[numerical_label[_]] for _ in range(len(data_label))]
+# The part below works only for linear SVM. Need to change it to make it work
+# for the new class.
 
-# To plot it we have to projsect on a two-dimensional space
-# The first coordinate will be the projection along the svm_direction
-# centered around the offset.\
-first_direction    = np.zeros(shape = 4)
-first_direction[0] = 1.0
-plt.scatter(np.dot(data_points, exmpl.svm_ovo[0,1,:].T)- exmpl.svm_ovo_of[0,1,:],\
- np.dot(data_points, first_direction.T), c = my_cmap)
-plt.show()
-plt.scatter(np.dot(data_points, exmpl.svm_ovo[1,2,:].T)- exmpl.svm_ovo_of[1,2,:],\
- np.dot(data_points, first_direction.T), c = my_cmap)
-plt.show()
-plt.scatter(np.dot(data_points, exmpl.svm_ovo[0,2,:].T)- exmpl.svm_ovo_of[0,2,:],\
- np.dot(data_points, first_direction.T), c = my_cmap)
-plt.show()
+# # We can also plot the results:
+# color_dict = {0: 'tab:blue', 1: 'tab:orange', 2: 'tab:green'}
 
-# We can also confron this with the sklearn SVM:
-clf = SVC( kernel = 'linear')
-clf.fit(data_train, label_train)
+# le = preprocessing.LabelEncoder()
+# le.fit(data_label)
 
-print(confusion_matrix(label_test, clf.predict(data_test)))  
-print(classification_report(label_test, clf.predict(data_test)))
+# numerical_label = le.transform(data_label)
+# my_cmap = [color_dict[numerical_label[_]] for _ in range(len(data_label))]
 
-# Let us test how we perform on one the last two flowers.
+# # To plot it we have to projsect on a two-dimensional space
+# # The first coordinate will be the projection along the svm_direction
+# # centered around the offset.\
+# first_direction    = np.zeros(shape = 4)
+# first_direction[0] = 1.0
+# plt.scatter(np.dot(data_points, exmpl.svm_ovo[0][1].T)- exmpl.svm_ovo_of[0,1,:],\
+#  np.dot(data_points, first_direction.T), c = my_cmap)
+# plt.show()
+# plt.scatter(np.dot(data_points, exmpl.svm_ovo[1][2].T)- exmpl.svm_ovo_of[1,2, :],\
+#  np.dot(data_points, first_direction.T), c = my_cmap)
+# plt.show()
+# plt.scatter(np.dot(data_points, exmpl.svm_ovo[0][2].T)- exmpl.svm_ovo_of[0,2,:],\
+#  np.dot(data_points, first_direction.T), c = my_cmap)
+# plt.show()
 
-from huml import processing
-from sklearn.svm import LinearSVC
+# # We can also confron this with the sklearn SVM:
+# clf = SVC( kernel = 'linear')
+# clf.fit(data_train, label_train)
 
-embed()
+# print(confusion_matrix(label_test, clf.predict(data_test)))  
+# print(classification_report(label_test, clf.predict(data_test)))
 
-pr = processing()
-dataset_v = dataset.values
-data_sliced = pr.slice(dataset_v, ['Iris-versicolor', 'Iris-virginica'])
+# # Let us test how we perform on one the last two flowers.
 
-# We take out the labels:
-data_points  = data_sliced[:, :-1]
-data_label   = data_sliced[:, 4]
+# from huml import processing
+# from sklearn.svm import LinearSVC
 
-# We split the data. 
-data_test, data_train, label_test, label_train = train_test_split(data_points, data_label, test_size=0.30)
+# embed()
 
-for _ in range(1, 21):
+# pr = processing()
+# dataset_v = dataset.values
+# data_sliced = pr.slice(dataset_v, ['Iris-versicolor', 'Iris-virginica'])
 
-	# We creat the SVM class and fit it to the data
-	exmpl = svm(data_train, label_train, _/(25.0))
-	exmpl.fit()
+# # We take out the labels:
+# data_points  = data_sliced[:, :-1]
+# data_label   = data_sliced[:, 4]
 
-	# Now we can do predictions
-	predict_test = exmpl.predict(data_test)
+# # We split the data. 
+# data_test, data_train, label_test, label_train = train_test_split(data_points, data_label, test_size=0.30)
 
-	print('lambda = {}'.format(_/(25.0)))
-	# We see how good we perform.
-	print(confusion_matrix(label_test, predict_test))  
-	print(classification_report(label_test, predict_test))
+# for _ in range(1, 21):
 
-	# We confront with Sklearn
-	clf = LinearSVC()
-	clf.fit(data_train, label_train)
+# 	# We creat the SVM class and fit it to the data
+# 	exmpl = svm(data_train, label_train, _/(25.0))
+# 	exmpl.fit()
 
-	print(confusion_matrix(label_test, clf.predict(data_test)))  
-	print(classification_report(label_test, clf.predict(data_test)))
+# 	# Now we can do predictions
+# 	predict_test = exmpl.predict(data_test)
+
+# 	print('lambda = {}'.format(_/(25.0)))
+# 	# We see how good we perform.
+# 	print(confusion_matrix(label_test, predict_test))  
+# 	print(classification_report(label_test, predict_test))
+
+# 	# We confront with Sklearn
+# 	clf = LinearSVC()
+# 	clf.fit(data_train, label_train)
+
+# 	print(confusion_matrix(label_test, clf.predict(data_test)))  
+# 	print(classification_report(label_test, clf.predict(data_test)))
