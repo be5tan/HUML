@@ -226,3 +226,33 @@ class svm:
 		predictions = [self.dict_inv[_] for _ in predictions_numerical]
 
 		return predictions
+
+# We need eigenvalue decomposition for PCA.
+from numpy.linalg import eig
+
+class PCA:
+	def __init__(self, data):
+
+		# Dataset should be a numpy matrix.
+		self.dataset = data
+
+	def decompose(self):
+
+		# We center the data around the average
+		avrg = np.mean(self.dataset, axis = 0)
+		self.dataset = self.dataset - avrg
+
+		# We build the covariance matrix and
+		# do the eigenvalue decomposition
+		Cov_Matrix = np.dot(self.dataset.T, self.dataset)
+		[self.eig_val, self.eig_vec] = eig(Cov_Matrix)
+
+	def project(self, level):
+
+		# we project on the eigenvalues of order
+		# less or equal than level
+
+		self.projected = np.dot(self.dataset, self.eig_vec[:, :level])
+
+		return self.projected
+

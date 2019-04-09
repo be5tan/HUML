@@ -55,7 +55,15 @@ predict_test = exmpl.predict(data_test)
 print(confusion_matrix(label_test, predict_test))  
 print(classification_report(label_test, predict_test))
 
+N = 10
+x = arange(N)/N
+y = arange(N)/N
 
+for i in range(N):
+	for j in range(N):
+		M[i, j] = exmpl.predict([x[i], y[i]])
+
+plt.imshow(M)
 
 # The part below works only for linear SVM. Need to change it to make it work
 # for the new class.
