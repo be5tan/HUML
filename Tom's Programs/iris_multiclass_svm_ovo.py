@@ -56,12 +56,16 @@ print(confusion_matrix(label_test, predict_test))
 print(classification_report(label_test, predict_test))
 
 N = 10
+M = np.zeros(shape = (N,N))
+vec = np.zeros(shape = (1,2))
 x = arange(N)/N
 y = arange(N)/N
 
 for i in range(N):
 	for j in range(N):
-		M[i, j] = exmpl.predict([x[i], y[i]])
+		vect[0,0] = x[i]
+		vect[0,1] = y[i]
+		M[i, j] = exmpl.predict(vect)
 
 plt.imshow(M)
 
