@@ -227,6 +227,43 @@ class svm:
 
 		return predictions
 
+	def predict_numerical(self, input_dataset_test):
+
+		# We predict the one versus one classification first.
+		prediction_vector = np.zeros(shape = (input_dataset_test.shape[0], self.num_labels, self.num_labels))
+
+		for label_index in range(self.num_labels):
+			for label_vs_index in range(label_index+1, self.num_labels):
+
+				# We always need the sliced data!
+				self.cur_label = label_index
+				self.label_vs  = label_vs_index
+				self.prepare_data_ovo()
+
+				# In this way we can compute the prediction function
+				prediction_vector[:, label_index, label_vs_index] = self.prediction_function(input_dataset_test)\
+				- self.svm_ovo_of[label_index, label_vs_index, :].T
+
+				#We make the matrix antisymmetric.
+				prediction_vector[:, label_vs_index, label_index] = - prediction_vector[:, label_index, label_vs_index]
+
+		# We pass from numerical to +/-1 for voting:
+		prediction_vector= 0.5*(np.sign(prediction_vector) +1)
+		# Then sum all the results, to get the votes.
+		prediction_votes = np.zeros(shape = (input_dataset_test.shape[0], self.num_labels))
+		prediction_votes = np.sum(prediction_vector, axis = 2)
+
+		# And we choose the class that gets the most votes.
+		predictions_numerical = np.argmax(prediction_votes, axis =1)
+
+		# The prediction is a number. We transform it into a label
+		# via the preprocessing procedure.
+		#predictions = [self.dict_inv[_] for _ in predictions_numerical]
+
+		print(prediction_votes)
+
+		return predictions_numerical
+
 # We need eigenvalue decomposition for PCA.
 from numpy.linalg import eig
 
