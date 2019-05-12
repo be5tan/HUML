@@ -20,7 +20,7 @@ import torchvision
 # 1) Run conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 
 # Don't know why we need this
-from __future__ import print_function
+#from __future__ import print_function
 
 embed()
 
