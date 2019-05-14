@@ -28,9 +28,6 @@ from sklearn.svm import SVC
 # We want to use PyTorch
 import torch
 
-# For simplicity we write
-import torch.nn.functional as torchf
-
 
 # We devine a convolutional neural network class
 # In this setting we need a 1D convolutional net
@@ -45,19 +42,11 @@ class my_cnn(torch.nn.Module):
 
         # We define the first convolutional layer:
         self.conv1 = torch.nn.Conv1d(in_channels = 1, out_channels = 1, kernel_size =3, stride = 1, padding = 1)
-        # Then the pooling:
-        self.pool1 = torch.nn.MaxPool1d(kernel_size = 2, stride = 1,  padding =1)
-        # Then the first linear layer:
-        self.lin1  = torch.nn.Linear(5, 10)
-
-        #Then the second linear layer:
-        self.lin2  = torch.nn.Linear(10, 3)
 
     def forward(self, x):
 
         # We compute the forward process of the net:
-        x = self.pool1(self.conv1(x))
-        x = torchf.relu(x)
+        x = self.conv1(x)
 
         return(x)
 
