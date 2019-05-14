@@ -78,8 +78,11 @@ class my_cnn(torch.nn.Module):
 def createLossAndOptimizer(net, learning_rate=0.002):
     
     #Loss function: It's the classical entropy:
-    loss = torch.nn.CrossEntropyLoss()
+    #loss = torch.nn.CrossEntropyLoss().double()
     
+    # Mean Square Error Loss function
+    loss = torch.nn.MSELoss(reduction='sum').double()
+
     #Optimizer (stochastic gradient descent):
     optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
     
@@ -112,7 +115,7 @@ device = torch.device("cuda:0") # Uncomment this to run on GPU
 
 # Create random input and output data
 x = torch.from_numpy(data_train).double()
-y = torch.from_numpy(label_train).double()
+y = torch.from_numpy(label_train.T).double()
 
 # We have to put them into the shape (dataset_size, 1, data_point_size)
 # where the 1 represents the number of input channels
@@ -128,10 +131,9 @@ net = net.double()
 # First we define the loss and optimisation algorithm via the
 # definition at the beginning of the program
 (loss_fn, optim_fn) = createLossAndOptimizer(net)
+loss_fn = loss_fn.double()
 
-embed()
-
-for t in range(10):
+for t in range(800):
 
     # Forward pass:
     y_pred = net(x)
@@ -149,7 +151,7 @@ for t in range(10):
 
     # and based on the gradient and via the optimizer we
     # adjourn the parameters:
-    optimizer.step()
+    optim_fn.step()
 
 
 embed()
