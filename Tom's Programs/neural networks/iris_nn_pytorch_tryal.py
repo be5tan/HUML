@@ -23,6 +23,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split 
 
 # To assign numerical values to the labels.
+# And also from one-hot encoding.
 from sklearn import preprocessing
 
 # SVM com Sklearn, for comparison.
@@ -80,7 +81,7 @@ def createLossAndOptimizer(net, learning_rate=0.002):
     loss = torch.nn.CrossEntropyLoss()
     
     #Optimizer (stochastic gradient descent):
-    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
     
     return(loss, optimizer)
 
@@ -97,20 +98,15 @@ dataset = pd.read_csv(url, names=names)
 data_points  = dataset.iloc[:, :-1].values
 data_label   = dataset.iloc[:, 4].values
 
-le = preprocessing.LabelEncoder()
-le.fit(data_label)
-numerical_label = le.transform(data_label)
+# We have to do one-hot encoding of the labels.
+oh = preprocessing.LabelBinarizer()
+oh.fit(data_label)
+oh_label = oh.transform(data_label)
 
 # We split the data. 
-data_test, data_train, label_test, label_train = train_test_split(data_points, numerical_label, test_size=0.30)
+data_test, data_train, label_test, label_train = train_test_split(data_points, oh_label, test_size=0.30)
 label_train = np.matrix(label_train, dtype = np.double).T
 
-N = len(data_train)
-D_in = 4
-H = 100
-D_out = 1
-
-dtype = torch.double
 #device = torch.device("cpu")
 device = torch.device("cuda:0") # Uncomment this to run on GPU
 
@@ -131,11 +127,29 @@ net = net.double()
 # We define a simple training algorithm.
 # First we define the loss and optimisation algorithm via the
 # definition at the beginning of the program
-(loss, optim) = createLossAndOptimizer(net, learning_rate)
+(loss_fn, optim_fn) = createLossAndOptimizer(net)
 
-for t in range(500):
+embed()
 
-    # Forward pass
+for t in range(10):
+
+    # Forward pass:
     y_pred = net(x)
+
+    # We compute the loss function:
+    loss = loss_fn(y_pred, y)
+    print(t, loss.item())
+
+    # We zero the gradient of the optimizer
+    # (this passage just has to happen)
+    optim_fn.zero_grad()
+
+    # We go backward in the loss:
+    loss.backward()
+
+    # and based on the gradient and via the optimizer we
+    # adjourn the parameters:
+    optimizer.step()
+
 
 embed()
