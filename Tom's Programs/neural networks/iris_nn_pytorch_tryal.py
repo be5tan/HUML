@@ -3,6 +3,9 @@
 # https://pytorch.org/tutorials/beginner/pytorch_with_examples.html
 # to the IRIS dataset
 
+# We also follow
+#https://blog.algorithmia.com/convolutional-neural-nets-in-pytorch/
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,20 +49,41 @@ class my_cnn(torch.nn.Module):
         # We define the first convolutional layer:
         self.conv1 = torch.nn.Conv1d(in_channels = 1, out_channels = 1, kernel_size =3, stride = 1, padding = 1)
         # Then the pooling:
-        self.pool1 = torch.nn.MaxPool1d(kernel_size = 2, stride = 1,  padding =1)
+        self.pool1 = torch.nn.MaxPool1d(kernel_size = 2, stride = 2,  padding =0)
         # Then the first linear layer:
-        self.lin1  = torch.nn.Linear(5, 10)
+        self.lin1  = torch.nn.Linear(2, 10)
 
         #Then the second linear layer:
         self.lin2  = torch.nn.Linear(10, 3)
 
     def forward(self, x):
 
-        # We compute the forward process of the net:
+        # We compute the forward process of the net
+        # Starting with the convolution part:
         x = self.pool1(self.conv1(x))
         x = torchf.relu(x)
 
+        # And then the linear part.
+        # First we need to put it into the right shape:
+        # -1 tells him to figure out the correct dimension by himself.
+        x = x.reshape(-1,2)
+        x = self.lin1(x)
+        x = torchf.relu(x)
+        x = self.lin2(x)
+
         return(x)
+
+# Loss and optimizer for our cnn:
+def createLossAndOptimizer(net, learning_rate=0.002):
+    
+    #Loss function: It's the classical entropy:
+    loss = torch.nn.CrossEntropyLoss()
+    
+    #Optimizer (stochastic gradient descent):
+    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
+    
+    return(loss, optimizer)
+
 
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 
@@ -103,5 +127,15 @@ x = x.double()
 # We define the network:
 net = my_cnn()
 net = net.double()
+
+# We define a simple training algorithm.
+# First we define the loss and optimisation algorithm via the
+# definition at the beginning of the program
+(loss, optim) = createLossAndOptimizer(net, learning_rate)
+
+for t in range(500):
+
+    # Forward pass
+    y_pred = net(x)
 
 embed()
