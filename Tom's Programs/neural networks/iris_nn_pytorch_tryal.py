@@ -153,5 +153,9 @@ for t in range(800):
     # adjourn the parameters:
     optim_fn.step()
 
+# Now we have to do our prediction:
+
+def one_hot_predictor( data_input ):
+    
 
 embed()
